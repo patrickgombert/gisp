@@ -5,9 +5,6 @@ import (
 	"strings"
 )
 
-var CollectionOpeningLiterals = map[rune]rune{'(': '('}
-var CollectionClosingLiterals = map[rune]rune{')': ')'}
-
 type tokenIterator struct {
 	init      bool
 	token     string
@@ -46,7 +43,7 @@ func (iter *tokenIterator) hasNext() bool {
 				break
 			}
 
-			_, isClosingLiteral := CollectionOpeningLiterals[char]
+			_, isClosingLiteral := CollectionClosingLiterals[char]
 			if isClosingLiteral {
 				sb.WriteRune(char)
 				remainingSliceStart++
@@ -71,8 +68,7 @@ func (iter *tokenIterator) hasNext() bool {
 	iter.token = sb.String()
 	if len(iter.token) > 1 {
 		lastCharacter := iter.token[len(iter.token)-1:]
-		_, isClosingLiteral := CollectionClosingLiterals[[]rune(lastCharacter)[0]]
-		if isClosingLiteral {
+		if lastCharacter == CLOSE_LIST {
 			iter.token = iter.token[:len(iter.token)-1]
 			remainingSliceStart--
 		}

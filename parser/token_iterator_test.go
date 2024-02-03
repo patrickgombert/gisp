@@ -36,6 +36,11 @@ func TestListClosingLiteral(t *testing.T) {
 	AssertIteration(t, "+ 42) 24)", "+", "42", ")", "24", ")")
 }
 
+func TestRepeatedListLiteral(t *testing.T) {
+	AssertIteration(t, "(())", "(", "(", ")", ")")
+	AssertIteration(t, "(+ (- 1 (* 2 3)) 3)", "(", "+", "(", "-", "1", "(", "*", "2", "3", ")", ")", "3", ")")
+}
+
 func TestExtraEmptySpace(t *testing.T) {
 	AssertIteration(t, "  (  1  )  ", "(", "1", ")")
 }

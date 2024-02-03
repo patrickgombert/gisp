@@ -1,15 +1,10 @@
 package runtime
 
 import (
-	ds "github.com/patrickgombert/gisp/datastructures"
+	t "github.com/patrickgombert/gisp/types"
 )
 
-type Function struct {
-	bindings []Symbol
-	body     *ds.List
-}
-
 type Environment struct {
-	inNamespace Symbol
-	functions   map[Symbol]Function
+	inNamespace t.Symbol
+	functions   map[t.Symbol]t.Function
 }
