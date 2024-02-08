@@ -10,6 +10,19 @@ type Symbol struct {
 	name string
 }
 
+func NameSymbol(n string) Symbol {
+	return Symbol{
+		name: n,
+	}
+}
+
+func NamespaceSymbol(n1 string, n2 string) Symbol {
+	return Symbol{
+		ns:   n1,
+		name: n2,
+	}
+}
+
 func ParseSymbol(raw string) (Symbol, error) {
 	parts := strings.Split(raw, "/")
 	switch len(parts) {

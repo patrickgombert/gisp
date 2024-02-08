@@ -28,6 +28,7 @@ func FromString(input string) (interface{}, error) {
 	listStack := newStack()
 	currentList := make([]interface{}, 0)
 	lastSeenToken := "("
+	closed := false
 
 	for iter.hasNext() {
 		token, err = iter.getToken()
@@ -44,6 +45,8 @@ func FromString(input string) (interface{}, error) {
 				listStack = newListStack
 				list := toList(currentList)
 				currentList = append(popList, list)
+			} else {
+				closed = true
 			}
 		} else {
 			value, valueError := toValue(token)
@@ -56,7 +59,7 @@ func FromString(input string) (interface{}, error) {
 		lastSeenToken = token
 	}
 
-	if len(listStack) != 0 || lastSeenToken != CLOSE_LIST {
+	if len(listStack) != 0 || !closed || lastSeenToken != CLOSE_LIST {
 		return nil, errors.New("Unclosed list")
 	}
 
