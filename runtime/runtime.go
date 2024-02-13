@@ -1,10 +1,15 @@
 package runtime
 
 import (
+	"fmt"
+
+	ds "github.com/patrickgombert/gisp/datastructures"
 	t "github.com/patrickgombert/gisp/types"
 )
 
 var DEFAULT_NAMESPACE = t.NameSymbol("core")
+
+const MAXINT = int(^uint(0) >> 1)
 
 type Environment struct {
 	inNamespace t.Symbol
@@ -26,7 +31,10 @@ func DefaultEnvironment() *Environment {
 		env = &Environment{
 			inNamespace: DEFAULT_NAMESPACE,
 			functions: map[t.Symbol]t.Function{
-				t.NamespaceSymbol("core", "+"): BuiltInFunction{f: add},
+				t.NamespaceSymbol("core", "+"):      BuiltInFunction{f: add},
+				t.NamespaceSymbol("core", "reduce"): BuiltInFunction{f: reduce},
+				t.NamespaceSymbol("core", "list"):   BuiltInFunction{f: list},
+				t.NamespaceSymbol("core", "print"):  BuiltInFunction{f: prnt},
 			},
 		}
 	}
@@ -38,36 +46,54 @@ func add(objs ...interface{}) interface{} {
 	var intSum int64 = 0
 	var floatSum float64 = 0.0
 	usingFloat := false
+	seenInt8 := false
+	seenInt16 := false
+	seenInt32 := false
+	seenInt64 := false
+	seenFloat64 := false
+
 	for _, obj := range objs {
 		switch obj.(type) {
 		case int:
 			intSum += int64(obj.(int))
 			floatSum += float64(obj.(int))
 		case int8:
+			seenInt8 = true
 			intSum += int64(obj.(int8))
 			floatSum += float64(obj.(int8))
 		case int16:
+			seenInt16 = true
 			intSum += int64(obj.(int16))
 			floatSum += float64(obj.(int16))
 		case int32:
+			seenInt32 = true
 			intSum += int64(obj.(int32))
 			floatSum += float64(obj.(int32))
 		case int64:
+			seenInt64 = true
 			intSum += obj.(int64)
 			floatSum += float64(obj.(int64))
 		case uint8:
+			seenInt8 = true
 			intSum += int64(obj.(uint8))
 			floatSum += float64(obj.(uint8))
+		case uint16:
+			seenInt16 = true
+			intSum += int64(obj.(uint16))
+			floatSum += float64(obj.(uint16))
 		case uint32:
+			seenInt32 = true
 			intSum += int64(obj.(uint32))
 			floatSum += float64(obj.(uint32))
 		case uint64:
+			seenInt64 = true
 			intSum += int64(obj.(uint64))
 			floatSum += float64(obj.(uint64))
 		case float32:
 			floatSum += float64(obj.(float32))
 			usingFloat = true
 		case float64:
+			seenFloat64 = true
 			floatSum += obj.(float64)
 			usingFloat = true
 		default:
@@ -76,8 +102,60 @@ func add(objs ...interface{}) interface{} {
 	}
 
 	if usingFloat {
-		return floatSum
+		if seenFloat64 {
+			return floatSum
+		} else {
+			return float32(floatSum)
+		}
 	} else {
-		return intSum
+		if !seenInt64 && !seenInt32 && !seenInt16 && !seenInt8 {
+			return int(intSum)
+		} else if seenInt64 || intSum > 2147483647 || intSum < -2147483648 {
+			return intSum
+		} else if seenInt32 || intSum > 32767 || intSum < -32768 {
+			return int32(intSum)
+		} else if seenInt16 || intSum > 127 || intSum < -128 {
+			return int16(intSum)
+		} else if seenInt8 {
+			return int8(intSum)
+		} else {
+			return int(intSum)
+		}
 	}
+}
+
+func reduce(objs ...interface{}) interface{} {
+	f := objs[0].(t.Function)
+	var seq ds.Seq
+	var acc interface{}
+	if col, ok := objs[1].(ds.Collection); ok {
+		seq = col.Seq()
+		acc = seq.First()
+		seq = seq.Rest()
+	} else {
+		seq = objs[2].(ds.Collection).Seq()
+		acc = objs[1]
+	}
+
+	for seq.First() != nil {
+		acc = f.Apply(acc, seq.First())
+		seq = seq.Rest()
+	}
+
+	return acc
+}
+
+func list(objs ...interface{}) interface{} {
+	elements := make([]interface{}, len(objs))
+	for i := len(objs) - 1; i >= 0; i-- {
+		elements[len(objs)-1-i] = objs[i]
+	}
+	return ds.NewList(elements...)
+}
+
+func prnt(objs ...interface{}) interface{} {
+	if len(objs) > 0 {
+		fmt.Printf(objs[0].(string), objs[1:]...)
+	}
+	return nil
 }

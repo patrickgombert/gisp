@@ -81,7 +81,7 @@ func toValue(token string) (interface{}, error) {
 func toList(items []interface{}) *ds.List {
 	list := ds.NewList()
 	for i := len(items) - 1; i >= 0; i-- {
-		list = list.Cons(items[i])
+		list = list.Cons(items[i]).(*ds.List)
 	}
 	return list
 }

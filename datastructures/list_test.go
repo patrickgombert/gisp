@@ -18,8 +18,8 @@ func TestEmptyList(t *testing.T) {
 	assert.Nil(t, l.First())
 	assert.Equal(t, 0, l.Rest().(*List).Count())
 
-	assert.Equal(t, "obj", newL.First())
-	assert.Equal(t, l, newL.Rest())
+	assert.Equal(t, "obj", newL.Seq().First())
+	assert.Equal(t, l, newL.Seq().Rest())
 }
 
 func TestConsPrepends(t *testing.T) {
@@ -27,7 +27,7 @@ func TestConsPrepends(t *testing.T) {
 	newL := l.Cons(1)
 
 	assert.Equal(t, 3, newL.Count())
-	assert.Equal(t, 1, newL.First())
-	assert.Equal(t, 2, newL.Rest().First())
-	assert.Equal(t, 3, newL.Rest().Rest().First())
+	assert.Equal(t, 1, newL.Seq().First())
+	assert.Equal(t, 2, newL.Seq().Rest().First())
+	assert.Equal(t, 3, newL.Seq().Rest().Rest().First())
 }

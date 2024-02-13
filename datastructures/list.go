@@ -15,7 +15,7 @@ var EMPTY_LIST = &List{
 func NewList(objs ...interface{}) *List {
 	l := EMPTY_LIST
 	for _, obj := range objs {
-		l = l.Cons(obj)
+		l = l.Cons(obj).(*List)
 	}
 	return l
 }
@@ -35,7 +35,7 @@ func (l *List) Count() int {
 	return l.count
 }
 
-func (l *List) Cons(item interface{}) *List {
+func (l *List) Cons(item interface{}) Collection {
 	return &List{
 		first: item,
 		rest:  l,
