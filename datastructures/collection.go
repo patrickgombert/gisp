@@ -1,12 +1,12 @@
 package datastructures
 
 type Seq interface {
-	First() interface{}
+	First() any
 	Rest() Seq
 }
 
 type Collection interface {
 	Count() int
-	Cons(item interface{}) Collection
+	Cons(item any) Collection
 	Seq() Seq
 }

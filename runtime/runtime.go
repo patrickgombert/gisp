@@ -17,10 +17,10 @@ type Environment struct {
 }
 
 type BuiltInFunction struct {
-	f func(...interface{}) interface{}
+	f func(...any) any
 }
 
-func (bif BuiltInFunction) Apply(objs ...interface{}) interface{} {
+func (bif BuiltInFunction) Apply(objs ...any) any {
 	return bif.f(objs...)
 }
 
@@ -42,7 +42,7 @@ func DefaultEnvironment() *Environment {
 	return env
 }
 
-func add(objs ...interface{}) interface{} {
+func add(objs ...any) any {
 	var intSum int64 = 0
 	var floatSum float64 = 0.0
 	usingFloat := false

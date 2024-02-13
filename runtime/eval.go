@@ -5,7 +5,7 @@ import (
 	t "github.com/patrickgombert/gisp/types"
 )
 
-func apply(sym t.Symbol, objs ...interface{}) interface{} {
+func apply(sym t.Symbol, objs ...any) any {
 	lookupSym := sym
 	if sym.Namespace() == "" {
 		lookupSym = t.NamespaceSymbol(DefaultEnvironment().inNamespace.Name(), sym.Name())
@@ -15,10 +15,10 @@ func apply(sym t.Symbol, objs ...interface{}) interface{} {
 	return f.(t.Function).Apply(objs...)
 }
 
-func Eval(program *ds.List, env *Environment) interface{} {
+func Eval(program *ds.List, env *Environment) any {
 	f := program.First()
 	arg := program.Rest()
-	args := make([]interface{}, 0)
+	args := make([]any, 0)
 	for arg.First() != nil {
 		currentArg := arg.First()
 		if l, ok := currentArg.(*ds.List); ok {

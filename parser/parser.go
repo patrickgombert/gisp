@@ -10,7 +10,7 @@ import (
 	t "github.com/patrickgombert/gisp/types"
 )
 
-func FromString(input string) (interface{}, error) {
+func FromString(input string) (any, error) {
 	iter := NewTokenIterator(input)
 	if !iter.hasNext() {
 		return nil, fmt.Errorf("Invalid input %q", input)
@@ -26,7 +26,7 @@ func FromString(input string) (interface{}, error) {
 	}
 
 	listStack := newStack()
-	currentList := make([]interface{}, 0)
+	currentList := make([]any, 0)
 	lastSeenToken := "("
 	closed := false
 
@@ -38,7 +38,7 @@ func FromString(input string) (interface{}, error) {
 
 		if token == OPEN_LIST {
 			listStack = listStack.Push(currentList)
-			currentList = make([]interface{}, 0)
+			currentList = make([]any, 0)
 		} else if token == CLOSE_LIST {
 			newListStack, popList := listStack.Pop()
 			if popList != nil {
@@ -66,7 +66,7 @@ func FromString(input string) (interface{}, error) {
 	return toList(currentList), nil
 }
 
-func toValue(token string) (interface{}, error) {
+func toValue(token string) (any, error) {
 	if token[0] == '"' {
 		return strings.Trim(token, "\""), nil
 	} else if integer, integerErr := strconv.Atoi(token); integerErr == nil {
@@ -78,7 +78,7 @@ func toValue(token string) (interface{}, error) {
 	}
 }
 
-func toList(items []interface{}) *ds.List {
+func toList(items []any) *ds.List {
 	list := ds.NewList()
 	for i := len(items) - 1; i >= 0; i-- {
 		list = list.Cons(items[i]).(*ds.List)

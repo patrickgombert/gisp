@@ -16,7 +16,7 @@ func TestRecursiveEval(t *testing.T) {
 	assert.Equal(t, 10, evalStr("(+ (+ 1 2) (+ 3 4))"))
 }
 
-func evalStr(s string) interface{} {
+func evalStr(s string) any {
 	result, _ := p.FromString(s)
 	return Eval(result.(*ds.List), DefaultEnvironment())
 }

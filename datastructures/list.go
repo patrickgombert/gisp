@@ -1,7 +1,7 @@
 package datastructures
 
 type List struct {
-	first interface{}
+	first any
 	rest  *List
 	count int
 }
@@ -12,7 +12,7 @@ var EMPTY_LIST = &List{
 	count: 0,
 }
 
-func NewList(objs ...interface{}) *List {
+func NewList(objs ...any) *List {
 	l := EMPTY_LIST
 	for _, obj := range objs {
 		l = l.Cons(obj).(*List)
@@ -20,7 +20,7 @@ func NewList(objs ...interface{}) *List {
 	return l
 }
 
-func (l *List) First() interface{} {
+func (l *List) First() any {
 	return l.first
 }
 
@@ -35,7 +35,7 @@ func (l *List) Count() int {
 	return l.count
 }
 
-func (l *List) Cons(item interface{}) Collection {
+func (l *List) Cons(item any) Collection {
 	return &List{
 		first: item,
 		rest:  l,

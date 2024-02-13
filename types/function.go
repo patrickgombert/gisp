@@ -1,5 +1,5 @@
 package types
 
 type Function interface {
-	Apply(objs ...interface{}) interface{}
+	Apply(objs ...any) any
 }

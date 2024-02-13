@@ -1,16 +1,16 @@
 package parser
 
-type stack [][]interface{}
+type stack [][]any
 
 func newStack() stack {
 	return make(stack, 0)
 }
 
-func (s stack) Push(item []interface{}) stack {
+func (s stack) Push(item []any) stack {
 	return append(s, item)
 }
 
-func (s stack) Pop() (stack, []interface{}) {
+func (s stack) Pop() (stack, []any) {
 	l := len(s)
 	if l == 0 {
 		return nil, nil
