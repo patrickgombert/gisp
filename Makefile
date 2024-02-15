@@ -9,4 +9,7 @@ fmt:
 test:
 	@$(GO_CMD) test $(TEST_SOURCES)
 
+build:
+	@$(GO_CMD) build
+
 .PHONY: fmt test
