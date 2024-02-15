@@ -31,6 +31,10 @@ func (iter *tokenIterator) hasNext() bool {
 	remainingSliceStart := 0
 	openingQuote := false
 	for _, char := range iter.remaining {
+		if char == '\n' && !openingQuote {
+			continue
+		}
+
 		if !openingQuote {
 			if char == ' ' {
 				break

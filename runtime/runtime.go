@@ -124,10 +124,10 @@ func add(objs ...any) any {
 	}
 }
 
-func reduce(objs ...interface{}) interface{} {
+func reduce(objs ...any) any {
 	f := objs[0].(t.Function)
 	var seq ds.Seq
-	var acc interface{}
+	var acc any
 	if col, ok := objs[1].(ds.Collection); ok {
 		seq = col.Seq()
 		acc = seq.First()
@@ -145,15 +145,15 @@ func reduce(objs ...interface{}) interface{} {
 	return acc
 }
 
-func list(objs ...interface{}) interface{} {
-	elements := make([]interface{}, len(objs))
+func list(objs ...any) any {
+	elements := make([]any, len(objs))
 	for i := len(objs) - 1; i >= 0; i-- {
 		elements[len(objs)-1-i] = objs[i]
 	}
 	return ds.NewList(elements...)
 }
 
-func prnt(objs ...interface{}) interface{} {
+func prnt(objs ...any) any {
 	if len(objs) > 0 {
 		fmt.Printf(objs[0].(string), objs[1:]...)
 	}

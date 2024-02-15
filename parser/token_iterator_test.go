@@ -53,6 +53,11 @@ func TestStringLiteral(t *testing.T) {
 	AssertIteration(t, "(\"foo ) ( bar\")", "(", "\"foo ) ( bar\"", ")")
 }
 
+func TestNewLine(t *testing.T) {
+	AssertIteration(t, "(+ 1\n 2)", "(", "+", "1", "2", ")")
+	AssertIteration(t, "\"foo \n bar\"", "\"foo \n bar\"")
+}
+
 func AssertIteration(t *testing.T, input string, tokens ...string) {
 	iter := NewTokenIterator(input)
 	for _, expectedToken := range tokens {
