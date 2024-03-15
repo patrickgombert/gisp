@@ -5,6 +5,7 @@ import (
 	"os"
 
 	ds "github.com/patrickgombert/gisp/datastructures"
+	"github.com/patrickgombert/gisp/function"
 	p "github.com/patrickgombert/gisp/parser"
 	r "github.com/patrickgombert/gisp/runtime"
 )
@@ -30,6 +31,6 @@ func main() {
 	}
 
 	if list, ok := program.(*ds.List); ok {
-		fmt.Printf("%s", r.Eval(list, r.DefaultEnvironment()))
+		fmt.Printf("%s", function.Eval(list, r.DefaultEnvironment()))
 	}
 }

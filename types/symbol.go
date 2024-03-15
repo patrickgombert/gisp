@@ -48,3 +48,11 @@ func (s Symbol) Namespace() string {
 func (s Symbol) Name() string {
 	return s.name
 }
+
+func (s Symbol) Format() string {
+	if s.ns != "" {
+		return fmt.Sprintf("%s/%s", s.ns, s.name)
+	} else {
+		return fmt.Sprintf("%s", s.name)
+	}
+}
